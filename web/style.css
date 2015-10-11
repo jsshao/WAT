@@ -23,6 +23,7 @@ p {
 	line-height: 2;
 	font-size: 18pt;
 	margin-top: 20px;
+	cursor: pointer;
 }
 
 .help {
