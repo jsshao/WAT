@@ -3,7 +3,7 @@
 <head>
 <title>WAT</title>
 
-<link href="style.css" rel='stylesheet' type='text/css' />
+<link href="css/style.css" rel='stylesheet' type='text/css' />
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
 
 </head>
@@ -17,16 +17,9 @@
 		</form>
 		<p class="help">Need help?</p>
 	</div>
+
 </body>
 
-<script type="text/javascript">
-	var code = 0;
-	document.getElementById("submit").addEventListener("click", function(){
-    	code = document.getElementById("code").value;
-    	console.log(code);
-    	//handle this and show "Connected" or provide error message if connection failed"
+<script type='text/javascript' src='js/main.js'></script>
 
-		document.getElementById("submit").innerHTML = "CONNECTED";
-    });
-</script>
 </html>
