@@ -46,3 +46,7 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# vim swap files
+*.swp
+*.swo
