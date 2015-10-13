@@ -9,7 +9,7 @@
     "tabCapture"
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["socket.io.js", "background.js"]
   },
   "browser_action": {
     "default_icon": "icon.png"
