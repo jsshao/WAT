@@ -1,0 +1,77 @@
+body {
+	
+	font-family: 'Lato', sans-serif;
+	text-align: center;
+	background-color: #363346;
+}
+
+h2 {
+	color: #fc8180;
+}
+
+p {
+	color: #fce6e8;
+}
+
+#submit {
+	background-color: #282534;
+	width: 90%;
+	height: 50px;
+	margin: auto;
+	color: #b2b1b6;
+	text-align: center;
+	line-height: 2;
+	font-size: 18pt;
+	margin-top: 20px;
+	cursor: pointer;
+}
+
+.help {
+	margin-top: 60px;
+	color: #8c8b8f;
+	text-decoration: underline;
+}
+
+.login {
+	width: 170px;
+	color: #fce6e8;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin: auto;
+}
+
+input {
+	border: 2px solid #605e69;
+	background-color: transparent;
+	width: 90%;
+	height: 50px;
+	text-align: center;
+	color: white;
+	font-size: 25pt;
+
+}
+
+.logo {
+	width: 300px;
+	margin: auto;
+	padding-top: 40px;
+	margin-top: 50px;
+}
+
+/* gradient code that might be used later */
+/*html {
+	height: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-repeat:no-repeat;
+    background: linear-gradient(#363346, #49384a ) ;
+
+    background: -webkit-linear-gradient( to bottom, #363346, #49384a);
+    background: -moz-linear-gradient( to bottom, #363346, #49384a);
+    background: -ms-linear-gradient( to bottom, #363346, #49384a);
+    background: -o-linear-gradient( to bottom, #363346, #49384a);
+    background: linear-gradient( to bottom, #363346, #49384a);
+}*/
