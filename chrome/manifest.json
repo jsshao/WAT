@@ -6,7 +6,8 @@
     "128": "icon.png"
   },
   "permissions": [
-    "tabCapture"
+    "tabCapture",
+    "*://zyra.mooo.com/*"
   ],
   "background": {
     "scripts": ["socket.io.js", "background.js"]
