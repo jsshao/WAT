@@ -50,22 +50,36 @@ function updateTurn(callback) {
 }
 var socket = io.connect();
 
-var room = location.pathname.substring(1);
-
-if (room === '') {
-    room = prompt('Enter room name:');
-}
-
 updateTurn(function() {
     console.log('hi');
 });
 
+var room = location.pathname.substring(1);
+
+document.getElementById("submit").addEventListener("click", function(){
+    var inputBox = document.getElementById("code");
+    room = inputBox.value;
+
+    //handle this and show "Connected" or provide error message if connection failed"
+    this.innerHTML = "CONNECTED";
+    inputBox.disabled = true;
+    playAudio();
+});
+
+
 if (room !== '') {
-    console.log('join room', room);
-    socket.emit('join room', room);
+    playAudio();
 }
 
-
+function playAudio() {
+    if (room !== '') {
+        console.log('join room', room);
+        socket.emit('join room', room);
+    } else {
+        console.log('This should never happen. Tried to join EMPTY room');
+    }   
+}
+    
 socket.on('created', function (room){
     console.log('Created room ' + room);
     console.log('this should not happen');
@@ -304,4 +318,3 @@ function removeCN(sdpLines, mLineIndex) {
     sdpLines[mLineIndex] = mLineElements.join(' ');
     return sdpLines;
 }
-
