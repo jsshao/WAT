@@ -1,8 +1,22 @@
 var static = require('node-static');
 var http = require('http');
 var file = new(static.Server)();
+var sys = require('sys');
+var exec = require('child_process').exec;
+var lastUpdate = 0;
 var app = http.createServer(function (req, res) {
-  file.serve(req, res);
+    req.addListener('end', function () {
+        var now = Date.now();
+        if (now - lastUpdate > 30000) {
+            console.log("updating turnserver");
+            exec('curl "https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913" > turnserver', function(error, stdout, stderr) {
+                file.serve(req, res);
+            });
+            lastUpdate = now;
+        } else {
+            file.serve(req, res);
+        }
+    }).resume(); 
 }).listen(80);
 
 var io = require('socket.io').listen(app);
