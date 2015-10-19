@@ -7,6 +7,7 @@
     var socket = io.connect(url);
 
     var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+    var turnReady = false;
 
     var hardcoded = {
             'url': 'turn:162.222.183.171:3478?transport=udp', 
@@ -37,6 +38,9 @@
         xhr.open('GET', 'http://zyra.mooo.com/turnserver', true);
         xhr.send();
     }
+    updateTurn(function() {
+        turnReady = true;
+    });
 
     var pc;
     var usersConnected;
@@ -233,31 +237,33 @@
     }
 
     chrome.browserAction.onClicked.addListener(function (tab) {
-        chrome.tabCapture.getCapturedTabs(function (tabs) {
-            if (audioStream != null) {
-                console.log("stopping capture");
-                var tracks = audioStream.getTracks();
-                tracks.forEach(function(track) {
-                    track.stop();
-                });
-                if (activeTab == tab.id) {
-                    activeTab = -1;
-                    return;   
-                }
-            };
-            console.log("capturing");
-            chrome.tabCapture.capture({'audio':true, 'video':false}, function (stream) {
-                audioStream = stream;
-                audioStream.onended = function(evt) {
-                    chrome.browserAction.setIcon({path:"icon.png"});
-                    hangup();
-                    audioStream = null;
+        if (turnReady) {
+            chrome.tabCapture.getCapturedTabs(function (tabs) {
+                if (audioStream != null) {
+                    console.log("stopping capture");
+                    var tracks = audioStream.getTracks();
+                    tracks.forEach(function(track) {
+                        track.stop();
+                    });
+                    if (activeTab == tab.id) {
+                        activeTab = -1;
+                        return;   
+                    }
                 };
-                chrome.browserAction.setIcon({path:"playing.png"});
-                activeTab = tab.id;
-                handleStream();
+                console.log("capturing");
+                chrome.tabCapture.capture({'audio':true, 'video':false}, function (stream) {
+                    audioStream = stream;
+                    audioStream.onended = function(evt) {
+                        chrome.browserAction.setIcon({path:"icon.png"});
+                        hangup();
+                        audioStream = null;
+                    };
+                    chrome.browserAction.setIcon({path:"playing.png"});
+                    activeTab = tab.id;
+                    handleStream();
+                });
             });
-        });
+        }
     });
 
     /*
