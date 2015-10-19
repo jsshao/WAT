@@ -9,22 +9,33 @@
 <base target='_blank'>
 
 <title>WAT</title>
+<link href="css/style.css" rel='stylesheet' type='text/css' />
+<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
 
 <!-- <link rel='stylesheet' href='css/main.css' /> -->
 
 </head>
 
 <body>
+	<img class="logo" src="images/logo.png">
+	<div class="logo">
+        <div id='container'>
+            <audio id='remoteAudio' autoplay controls></audio>
+        </div>
 
-<div id='container'>
+		<p>Enter the code provided in the Chrome extension in the box below</p>
+		<form>
+			<input type="text" id="code"><br>
+			<div id="submit">SUBMIT</div>
+		</form>
+		<p class="help">Need help?</p>
+	</div>
 
-    <audio id='remoteAudio' autoplay controls></audio>
 
-</div>
-
-<script src='/socket.io/socket.io.js'></script>
-<script src='js/lib/adapter.js'></script>
-<script src='js/main.js'></script>
+    <script type='text/javascript' src='js/homepage.js'></script>
+    <script src='/socket.io/socket.io.js'></script>
+    <script src='js/lib/adapter.js'></script>
+    <script src='js/main.js'></script>
 
 </body>
 </html>
