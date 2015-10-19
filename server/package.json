@@ -1,0 +1,24 @@
+{
+  "name": "WAT",
+  "version": "0.0.1",
+  "description": "Signalling server for WAT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsshao/WAT"
+  },
+  "keywords": [
+    "webrtc",
+    "audio"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-static": "~0.7.1",
+    "socket.io": "~0.9.16",
+    "express": "~3.4.0"
+  }
+}
