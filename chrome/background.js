@@ -6,8 +6,38 @@
     var url = 'http://zyra.mooo.com';
     var socket = io.connect(url);
 
-    var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'},
-                                 {'url': 'turn:162.222.183.171:3478?transport=udp', 'username':'1444787576:41784574', 'credential':'D4UBCDHKfJ6AuOlCVX8EchAT1Zo'}]};
+    var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+
+    var hardcoded = {
+            'url': 'turn:162.222.183.171:3478?transport=udp', 
+            'username':'1445297176:41784574', 
+            'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
+        };   // can update with new info from https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913
+             // only used if for some reason automatic fetch doesn't work
+
+    function updateTurn(callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var turnServer = JSON.parse(xhr.responseText);
+                    console.log('Got TURN server: ', turnServer);
+                    config.iceServers.push({
+                        'url': turnServer.uris[0],
+                        'username': turnServer.username,
+                        'credential': turnServer.password
+                    });
+                } else {
+                    console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
+                    config.iceServers.push(hardcoded);
+                }
+                callback();
+            }
+        };
+        xhr.open('GET', 'http://zyra.mooo.com/turnserver', true);
+        xhr.send();
+    }
+
     var pc;
     var usersConnected;
     var started = false;
