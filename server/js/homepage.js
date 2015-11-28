@@ -4,8 +4,8 @@ window.addEventListener('load', function() {
         inputBox = document.getElementById("code");
         code = inputBox.value;
         console.log(code);
-        //handle this and show "Connected" or provide error message if connection failed"
-        this.innerHTML = "CONNECTED";
+        //handle this and show "Loading" or provide error message if connection failed"
+        this.innerHTML = "LOADING";
         inputBox.disabled = true;
     });
 });
