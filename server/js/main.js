@@ -9,13 +9,12 @@ var remoteStream;
 var turnReady;
 var url = '159.203.114.155:80';
 
-var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
-
-var hardcoded = {
-        'url': 'turn:198.199.78.57:2222?transport=udp', 
-        'username':'username', 
-        'credential': 'password'
-    };   
+var turn_server = {
+    'url': 'turn:198.199.78.57:2222?transport=udp', 
+    'username':'username', 
+    'credential': 'password'
+};   
+var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, turn_server]};
 
 var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
 
@@ -26,16 +25,7 @@ var sdpConstraints = {'mandatory': {
 
 /////////////////////////////////////////////
 
-function updateTurn(callback) {
-            console.log("Using WAT-TURN as TURN server");
-            pc_config.iceServers.push(hardcoded);
-            callback();
-}
 var socket = io.connect();
-
-updateTurn(function() {
-    console.log('hi');
-});
 
 var room = location.pathname.substring(1);
 

@@ -7,26 +7,14 @@
     var url = 'http://159.203.114.155:80/';
     var socket = io.connect(url);
 
-    var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
-    var turnReady = false;
+    var turn_server = {
+        'url': 'turn:198.199.78.57:2222?transport=udp', 
+        'username':'username', 
+        'credential': 'password'
+    };
+    var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, turn_server]};
 
     var lastClient = null;
-
-    var hardcoded = {
-            'url': 'turn:198.199.78.57:2222?transport=udp', 
-            'username':'username', 
-            'credential': 'password'
-        };
-
-    function updateTurn(callback) {
-                console.log("Using WAT-TURN as TURN server");
-                config.iceServers.push(hardcoded);
-                callback();
-    }
-
-    updateTurn(function() {
-        turnReady = true;
-    });
 
     var pc;
     var usersConnected;
@@ -250,32 +238,30 @@
     }
 
     chrome.browserAction.onClicked.addListener(function (tab) {
-        if (turnReady) {
-            chrome.tabCapture.getCapturedTabs(function (tabs) {
-                if (audioStream != null) {
-                    console.log("stopping capture");
-                    var tracks = audioStream.getTracks();
-                    tracks.forEach(function(track) {
-                        track.stop();
-                    });
-                    if (activeTab == tab.id) {
-                        activeTab = -1;
-                        return;   
-                    }
-                };
-                console.log("capturing");
-                chrome.tabCapture.capture({'audio':true, 'video':false}, function (stream) {
-                    audioStream = stream;
-                    audioStream.onended = function(evt) {
-                        chrome.browserAction.setIcon({path:"icon.png"});
-                        hangup();
-                        audioStream = null;
-                    };
-                    chrome.browserAction.setIcon({path:"playing.png"});
-                    activeTab = tab.id;
-                    handleStream();
+        chrome.tabCapture.getCapturedTabs(function (tabs) {
+            if (audioStream != null) {
+                console.log("stopping capture");
+                var tracks = audioStream.getTracks();
+                tracks.forEach(function(track) {
+                    track.stop();
                 });
+                if (activeTab == tab.id) {
+                    activeTab = -1;
+                    return;   
+                }
+            };
+            console.log("capturing");
+            chrome.tabCapture.capture({'audio':true, 'video':false}, function (stream) {
+                audioStream = stream;
+                audioStream.onended = function(evt) {
+                    chrome.browserAction.setIcon({path:"icon.png"});
+                    hangup();
+                    audioStream = null;
+                };
+                chrome.browserAction.setIcon({path:"playing.png"});
+                activeTab = tab.id;
+                handleStream();
             });
-        }
+        });
     });
 })();
