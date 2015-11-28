@@ -16,9 +16,36 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="C5e-YH-Ahm">
+                                <rect key="frame" x="201" y="285" width="200" height="30"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="GlO-aN-mib"/>
+                                    <constraint firstAttribute="width" constant="200" id="c8n-PG-SY1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RLp-6u-4j6">
+                                <rect key="frame" x="277" y="340" width="46" height="30"/>
+                                <animations/>
+                                <state key="normal" title="ok"/>
+                                <connections>
+                                    <action selector="buttonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="M5E-sL-0zy"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="C5e-YH-Ahm" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VI9-jC-ede"/>
+                            <constraint firstItem="C5e-YH-Ahm" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="XeX-rC-sCh"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="textField" destination="C5e-YH-Ahm" id="Dtr-k0-TaM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
