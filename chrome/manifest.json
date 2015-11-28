@@ -7,7 +7,7 @@
   },
   "permissions": [
     "tabCapture",
-    "*://zyra.mooo.com/*"
+    "*://wat.hpp3.com/*"
   ],
   "background": {
     "scripts": ["socket.io.js", "background.js"]

@@ -3,7 +3,7 @@
 (function() {
     var activeTab = -1;
     var audioStream = null;
-    var url = 'http://zyra.mooo.com';
+    var url = 'http://wat.hpp3.com';
     var socket = io.connect(url);
 
     var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
@@ -35,7 +35,7 @@
                 callback();
             }
         };
-        xhr.open('GET', 'http://zyra.mooo.com/turnserver', true);
+        xhr.open('GET', 'http://wat.hpp3.com/turnserver', true);
         xhr.send();
     }
     updateTurn(function() {
@@ -265,43 +265,4 @@
             });
         }
     });
-
-    /*
-    function gotStreamId(streamId) {
-        navigator.webkitGetUserMedia({video: true, audio: { mandatory: {
-            chromeMediaSource: "desktop", 
-            chromeMediaSourceId: streamId
-        }}}, gotStream, gotError);
-    }
-
-    function gotStream(stream) {
-        audioStream = stream;
-        audioStream.onended = function(evt) {
-            chrome.browserAction.setIcon({path: "icon.png"});
-            hangup();
-            audioStream = null;
-        };
-        chrome.browserAction.setIcon({path:"playing.png"});
-        handleStream();
-    }
-
-    function gotError(error) {
-        console.log("ERROR: ", error);
-        window.error = error;
-    }
-
-    chrome.browserAction.onClicked.addListener(function (tab) {
-        if (audioStream != null) {
-            console.log("stopping capture");
-            var tracks = audioStream.getTracks();
-            tracks.forEach(function(track) {
-                track.stop();
-            });
-        } else {
-            chrome.desktopCapture.chooseDesktopMedia(["screen", "window"], null, gotStreamId);
-        }
-    });
-    */
-
-
 })();
