@@ -1,23 +1,21 @@
 package tsm.wat;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.webrtc.AudioTrack;
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
+import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
-import org.webrtc.VideoCapturer;
 import org.webrtc.VideoRendererGui;
-import org.webrtc.VideoSource;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -237,7 +235,10 @@ public class RTCClient {
         @Override
         public void onAddStream(MediaStream mediaStream) {
             Log.d(TAG,"onAddStream "+mediaStream.label());
-            mStreamListener.OnStreamAdded(mediaStream);
+            AudioTrack track = mediaStream.audioTracks.get(0);
+            track.setEnabled(true);
+            track.setState(MediaStreamTrack.State.LIVE);
+//            mStreamListener.OnStreamAdded(mediaStream);
             // remote streams are displayed from 1 to MAX_PEER (0 is localStream)
 //            mListener.onAddRemoteStream(mediaStream, endPoint+1);
         }
