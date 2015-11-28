@@ -8,4 +8,13 @@ window.addEventListener('load', function() {
         this.innerHTML = "LOADING";
         inputBox.disabled = true;
     });
+
+    document.addEventListener('keypress', function(evt) {
+        evt = evt || window.event;
+        // Check for <enter> key
+        if (evt.keyCode == 13) {
+            evt.preventDefault();
+            document.getElementById('submit').click()
+        }
+    });
 });
