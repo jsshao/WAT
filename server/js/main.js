@@ -198,10 +198,13 @@ function handleRemoteStreamAdded(event) {
     window.remote = event;
     remoteAudio.src = window.URL.createObjectURL(event.stream);
     remoteStream = event.stream;
+    document.getElementById("submit").innerHTML = "CONNECTED";
 }
 
 function handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
+    document.getElementById("submit").innerHTML = "RECONNECT";
+    document.getElementById("code").disabled = false;
 }
 
 function hangup() {
