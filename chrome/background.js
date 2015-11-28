@@ -3,11 +3,14 @@
 (function() {
     var activeTab = -1;
     var audioStream = null;
-    var url = 'http://159.203.114.155:80';
+    // var url = 'http://wat.hpp3.com/';
+    var url = 159.203.114.155;
     var socket = io.connect(url);
 
     var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
     var turnReady = false;
+
+    var lastClient = null;
 
     var hardcoded = {
             'url': 'turn:162.222.183.171:3478?transport=udp', 
@@ -57,8 +60,8 @@
         started = false;
 
         currentRoom = code.join('');
-        console.log('created room', currentRoom);
         socket.emit('create room', currentRoom);
+        console.log('created room', currentRoom);
         alert("Use the code "+currentRoom+" at "+url+" to connect");
     }
 
@@ -66,13 +69,38 @@
         socket.emit('message', message);
     }
 
-    socket.on('join', function(room) {
+    function sendMessageTo(id, message) {
+        socket.emit('messageTo', [message, id]);
+    }
+
+    socket.on('join', function(who) {
         usersConnected += 1;
+        lastClient = who;
         maybeStart();
-        console.log('user joined the room ', room, ', population: ', usersConnected);
+        console.log('user', who, 'joined the room, population:', usersConnected);
     });
 
     socket.on('message', function (message) {
+        console.log('received message: ', message);
+        if (message.type === 'answer' && started) {
+            pc.setRemoteDescription(new RTCSessionDescription(message)); 
+        } else if (message.type === 'candidate' && started) {
+            var candidate = new RTCIceCandidate({
+                sdpMLineIndex: message.label,
+                candidate: message.candidate
+            });
+            pc.addIceCandidate(candidate);
+        } else if (message === 'bye' && started) {
+            usersConnected -= 1;
+            console.log('user left, now ', usersConnected, ' remaining');
+        } else if (message === 'got user media') {
+            maybeStart();
+        }
+    });
+    socket.on('message_v2', function (obj) {
+        console.log('received obj: ', obj);
+        var message = obj[0]; 
+        var id = obj[1];
         console.log('received message: ', message);
         if (message.type === 'answer' && started) {
             pc.setRemoteDescription(new RTCSessionDescription(message)); 
@@ -107,7 +135,8 @@
     function handleIceCandidate(event) {
         console.log('handleIceCandidate event: ', event);
         if (event.candidate) {
-            sendMessage({
+            // sendMessage({
+            sendMessageTo(lastClient, {
                 type: 'candidate',
                 label: event.candidate.sdpMLineIndex,
                 id: event.candidate.sdpMid,
@@ -153,8 +182,9 @@
 
     function handleLocalDescription(sessionDescription) {
         pc.setLocalDescription(sessionDescription);
-        console.log('handle local session description', sessionDescription);
-        sendMessage(sessionDescription);
+        console.log('handle local session description', sessionDescription, 'to', lastClient);
+        sendMessageTo(lastClient, sessionDescription);
+        // sendMessage(sessionDescription);
     }
 
     function handleCreateOfferError(e) {

@@ -18,6 +18,7 @@ var app = http.createServer(function (req, res) {
         }
     }).resume(); 
 }).listen(80);
+// }).listen(2015);
 
 var io = require('socket.io').listen(app);
 
@@ -29,17 +30,21 @@ io.sockets.on('connection', function (socket){
 	console.log( 'connection established' );
 
 	function log() {
-		var array = [">>> Message from server: "];
-	  for (var i = 0; i < arguments.length; i++) {
-	  	array.push(arguments[i]);
-	  }
-	    socket.emit('log', array);
+        console.log(arguments);
 	}
 
 	socket.on('message', function (message) {
         var room = users[socket.id];
-		log('Got message: ', message, ', room: ', room);
-		io.sockets.in(room).emit('message', message);
+        log('ROOM: '+ room+ ', message:'+ message, ' from '+ socket.id+ ' to all');
+		io.sockets.in(room).emit('message_v2', [message, socket.id]);
+		// io.sockets.in(room).emit('message', message);
+	});
+
+	socket.on('messageTo', function (obj) {
+        var message = obj[0];
+        var id = obj[1];
+        var room = users[socket.id];
+        io.to(id).emit('message_v2', [message, socket.id]);
 	});
 
 	socket.on('create room', function (room) {
@@ -71,7 +76,7 @@ io.sockets.on('connection', function (socket){
 
 		if (rooms[room] == 'created') {
             users[socket.id] = room;
-            io.sockets.in(room).emit('join', room);
+            io.sockets.in(room).emit('join', socket.id);
 			socket.join(room);
 			socket.emit('joined', room);
 		} else { 
