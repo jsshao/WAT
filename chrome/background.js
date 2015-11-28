@@ -20,7 +20,7 @@
 
     function updateTurn(callback) {
                 console.log("Using WAT-TURN as TURN server");
-                pc_config.iceServers.push(hardcoded);
+                config.iceServers.push(hardcoded);
                 callback();
     }
 
