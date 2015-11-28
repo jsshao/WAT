@@ -26,6 +26,8 @@ var users = {};
 
 io.sockets.on('connection', function (socket){
 
+	console.log( 'connection established' );
+
 	function log() {
 		var array = [">>> Message from server: "];
 	  for (var i = 0; i < arguments.length; i++) {
@@ -41,9 +43,9 @@ io.sockets.on('connection', function (socket){
 	});
 
 	socket.on('create room', function (room) {
-		var numClients = io.sockets.clients(room).length;
+		//var numClients = io.sockets.clients(room).length;
 
-		log('Room ' + room + ' has ' + numClients + ' client(s)');
+		//log('Room ' + room + ' has ' + numClients + ' client(s)');
 		log('Request to create room', room);
         log('debug info: ' + rooms[room] + ' ' + JSON.stringify(rooms));
 
@@ -61,9 +63,9 @@ io.sockets.on('connection', function (socket){
 
 	});
 	socket.on('join room', function (room) {
-		var numClients = io.sockets.clients(room).length;
+		//var numClients = io.sockets.clients(room).length;
 
-		log('Room ' + room + ' has ' + numClients + ' client(s)');
+		//log('Room ' + room + ' has ' + numClients + ' client(s)');
 		log('Request to join room', room);
         log('debug info: ' + rooms[room] + ' ' + JSON.stringify(rooms));
 
