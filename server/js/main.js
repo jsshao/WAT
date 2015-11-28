@@ -45,7 +45,7 @@ function updateTurn(callback) {
             callback();
         }
     };
-    xhr.open('GET', 'http://zyra.mooo.com/turnserver', true);
+    xhr.open('GET', 'http://wat.hpp3.com/turnserver', true);
     xhr.send();
 }
 var socket = io.connect();
