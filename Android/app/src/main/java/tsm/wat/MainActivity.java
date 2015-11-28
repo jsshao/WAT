@@ -1,16 +1,12 @@
 package tsm.wat;
 
-import android.content.Intent;
 import android.graphics.Point;
-import android.media.MediaPlayer;
-import android.net.rtp.AudioStream;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,8 +14,6 @@ import android.widget.EditText;
 import org.webrtc.MediaStream;
 import org.webrtc.VideoRenderer;
 import org.webrtc.VideoRendererGui;
-
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
