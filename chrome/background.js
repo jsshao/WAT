@@ -4,7 +4,7 @@
     var activeTab = -1;
     var audioStream = null;
     // var url = 'http://wat.hpp3.com/';
-    var url = 159.203.114.155;
+    var url = '159.203.114.155:80';
     var socket = io.connect(url);
 
     var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
@@ -43,8 +43,8 @@
         started = false;
 
         currentRoom = code.join('');
+        console.log('creating room', currentRoom);
         socket.emit('create room', currentRoom);
-        console.log('created room', currentRoom);
         alert("Use the code "+currentRoom+" at "+url+" to connect");
     }
 
