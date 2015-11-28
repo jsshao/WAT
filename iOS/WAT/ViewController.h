@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SocketIO.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <SocketIODelegate>
+@property (nonatomic, strong) SocketIO *socketIO;
 
 
 @end
