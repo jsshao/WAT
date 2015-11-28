@@ -7,7 +7,7 @@
   },
   "permissions": [
     "tabCapture",
-    "*://wat.hpp3.com/*"
+    "*://159.203.114.155/*"
   ],
   "background": {
     "scripts": ["socket.io.js", "background.js"]

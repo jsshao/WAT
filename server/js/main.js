@@ -7,6 +7,7 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
+var url = '159.203.114.155';
 
 var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 
@@ -45,7 +46,7 @@ function updateTurn(callback) {
             callback();
         }
     };
-    xhr.open('GET', 'http://wat.hpp3.com/turnserver', true);
+    xhr.open('GET', '/turnserver', true);
     xhr.send();
 }
 var socket = io.connect();

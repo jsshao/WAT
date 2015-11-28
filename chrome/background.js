@@ -3,7 +3,7 @@
 (function() {
     var activeTab = -1;
     var audioStream = null;
-    var url = 'http://wat.hpp3.com';
+    var url = 'http://159.203.114.155';
     var socket = io.connect(url);
 
     var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
