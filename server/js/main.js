@@ -232,8 +232,10 @@ function hangup() {
 }
 
 function handleRemoteHangup() {
-    // stop();
-    // alert("Remote side hung up. Please recreate the room and refresh.");
+    console.log("Remote side hung up. Please recreate the room and reconnect");
+    submit.innerHTML = "RECONNECT";
+    submit.style.pointerEvents = 'auto';
+    document.getElementById("code").disabled = false;
 }
 
 function stop() {
