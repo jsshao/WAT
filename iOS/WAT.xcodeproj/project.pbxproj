@@ -15,6 +15,21 @@
 		019FC1661C09620300956B9C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 019FC1641C09620300956B9C /* LaunchScreen.storyboard */; };
 		019FC1711C09620300956B9C /* WATTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 019FC1701C09620300956B9C /* WATTests.m */; };
 		019FC17C1C09620300956B9C /* WATUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 019FC17B1C09620300956B9C /* WATUITests.m */; };
+		019FC18A1C098D1700956B9C /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1891C098D1700956B9C /* libc++.tbd */; };
+		019FC18C1C098D2000956B9C /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC18B1C098D2000956B9C /* libicucore.tbd */; };
+		019FC18E1C098D2700956B9C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC18D1C098D2700956B9C /* Security.framework */; };
+		019FC1901C098D3100956B9C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC18F1C098D3100956B9C /* CFNetwork.framework */; };
+		019FC1921C098D3B00956B9C /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1911C098D3B00956B9C /* GLKit.framework */; };
+		019FC1941C098D4D00956B9C /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1931C098D4D00956B9C /* libstdc++.6.tbd */; };
+		019FC1961C098D5500956B9C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1951C098D5500956B9C /* AudioToolbox.framework */; };
+		019FC1981C098D5B00956B9C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1971C098D5B00956B9C /* AVFoundation.framework */; };
+		019FC19A1C098D6700956B9C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1991C098D6700956B9C /* CoreAudio.framework */; };
+		019FC19C1C098D7000956B9C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC19B1C098D7000956B9C /* CoreMedia.framework */; };
+		019FC19E1C098D7800956B9C /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC19D1C098D7800956B9C /* CoreVideo.framework */; };
+		019FC1A01C098D7F00956B9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC19F1C098D7F00956B9C /* CoreGraphics.framework */; };
+		019FC1A21C098D8600956B9C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1A11C098D8600956B9C /* OpenGLES.framework */; };
+		019FC1A41C098D8C00956B9C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1A31C098D8C00956B9C /* QuartzCore.framework */; };
+		019FC1A61C098D9C00956B9C /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1A51C098D9C00956B9C /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +66,21 @@
 		019FC1771C09620300956B9C /* WATUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WATUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		019FC17B1C09620300956B9C /* WATUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WATUITests.m; sourceTree = "<group>"; };
 		019FC17D1C09620300956B9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		019FC1891C098D1700956B9C /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		019FC18B1C098D2000956B9C /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		019FC18D1C098D2700956B9C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		019FC18F1C098D3100956B9C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		019FC1911C098D3B00956B9C /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		019FC1931C098D4D00956B9C /* libstdc++.6.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
+		019FC1951C098D5500956B9C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		019FC1971C098D5B00956B9C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		019FC1991C098D6700956B9C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		019FC19B1C098D7000956B9C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		019FC19D1C098D7800956B9C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		019FC19F1C098D7F00956B9C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		019FC1A11C098D8600956B9C /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		019FC1A31C098D8C00956B9C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		019FC1A51C098D9C00956B9C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +88,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019FC1A61C098D9C00956B9C /* libsqlite3.tbd in Frameworks */,
+				019FC1A41C098D8C00956B9C /* QuartzCore.framework in Frameworks */,
+				019FC1A21C098D8600956B9C /* OpenGLES.framework in Frameworks */,
+				019FC1A01C098D7F00956B9C /* CoreGraphics.framework in Frameworks */,
+				019FC19E1C098D7800956B9C /* CoreVideo.framework in Frameworks */,
+				019FC19C1C098D7000956B9C /* CoreMedia.framework in Frameworks */,
+				019FC19A1C098D6700956B9C /* CoreAudio.framework in Frameworks */,
+				019FC1981C098D5B00956B9C /* AVFoundation.framework in Frameworks */,
+				019FC1961C098D5500956B9C /* AudioToolbox.framework in Frameworks */,
+				019FC1941C098D4D00956B9C /* libstdc++.6.tbd in Frameworks */,
+				019FC1921C098D3B00956B9C /* GLKit.framework in Frameworks */,
+				019FC1901C098D3100956B9C /* CFNetwork.framework in Frameworks */,
+				019FC18E1C098D2700956B9C /* Security.framework in Frameworks */,
+				019FC18C1C098D2000956B9C /* libicucore.tbd in Frameworks */,
+				019FC18A1C098D1700956B9C /* libc++.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +126,21 @@
 		019FC14A1C09620300956B9C = {
 			isa = PBXGroup;
 			children = (
+				019FC1A51C098D9C00956B9C /* libsqlite3.tbd */,
+				019FC1A31C098D8C00956B9C /* QuartzCore.framework */,
+				019FC1A11C098D8600956B9C /* OpenGLES.framework */,
+				019FC19F1C098D7F00956B9C /* CoreGraphics.framework */,
+				019FC19D1C098D7800956B9C /* CoreVideo.framework */,
+				019FC19B1C098D7000956B9C /* CoreMedia.framework */,
+				019FC1991C098D6700956B9C /* CoreAudio.framework */,
+				019FC1971C098D5B00956B9C /* AVFoundation.framework */,
+				019FC1951C098D5500956B9C /* AudioToolbox.framework */,
+				019FC1931C098D4D00956B9C /* libstdc++.6.tbd */,
+				019FC1911C098D3B00956B9C /* GLKit.framework */,
+				019FC18F1C098D3100956B9C /* CFNetwork.framework */,
+				019FC18D1C098D2700956B9C /* Security.framework */,
+				019FC18B1C098D2000956B9C /* libicucore.tbd */,
+				019FC1891C098D1700956B9C /* libc++.tbd */,
 				019FC1551C09620300956B9C /* WAT */,
 				019FC16F1C09620300956B9C /* WATTests */,
 				019FC17A1C09620300956B9C /* WATUITests */,
@@ -498,6 +558,7 @@
 				019FC1821C09620300956B9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		019FC1831C09620300956B9C /* Build configuration list for PBXNativeTarget "WATTests" */ = {
 			isa = XCConfigurationList;
@@ -506,6 +567,7 @@
 				019FC1851C09620300956B9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		019FC1861C09620300956B9C /* Build configuration list for PBXNativeTarget "WATUITests" */ = {
 			isa = XCConfigurationList;
@@ -514,6 +576,7 @@
 				019FC1881C09620300956B9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
