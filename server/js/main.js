@@ -7,8 +7,7 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
-var url = '159.203.114.155';
-// var url = 'http://wat.hpp3.com/';
+var url = '159.203.114.155:80';
 
 var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 

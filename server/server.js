@@ -16,11 +16,11 @@ var users = {};
 
 io.sockets.on('connection', function (socket){
 
-	console.log( 'connection established' );
+	console.log( 'new connection established' );
 
-	function log() {
+	var log = function() {
         console.log(arguments);
-	}
+	};
 
 	socket.on('message', function (message) {
         var room = users[socket.id];
