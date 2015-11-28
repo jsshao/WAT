@@ -7,7 +7,7 @@ window.addEventListener('load', function() {
         //handle this and show "Loading" or provide error message if connection failed"
         this.innerHTML = "LOADING";
         inputBox.disabled = true;
-        this.disabled = true;
+        this.style.pointerEvents = 'none';
     });
 
     document.addEventListener('keypress', function(evt) {

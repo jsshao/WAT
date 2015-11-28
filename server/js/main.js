@@ -231,7 +231,7 @@ function handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
     var submit = document.getElementById("submit");
     submit.innerHTML = "RECONNECT";
-    submit.disabled = false;
+    submit.style.pointerEvents = 'auto';
     document.getElementById("code").disabled = false;
 }
 
