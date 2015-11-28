@@ -233,6 +233,7 @@ function hangup() {
 
 function handleRemoteHangup() {
     console.log("Remote side hung up. Please recreate the room and reconnect");
+    var submit = document.getElementById("submit");
     submit.innerHTML = "RECONNECT";
     submit.style.pointerEvents = 'auto';
     document.getElementById("code").disabled = false;
