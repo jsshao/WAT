@@ -13,11 +13,10 @@ var url = '159.203.114.155';
 var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 
 var hardcoded = {
-        'url': 'turn:162.222.183.171:3478?transport=udp', 
-        'username':'1445297176:41784574', 
-        'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
-    };   // can update with new info from https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913
-         // only used if for some reason automatic fetch doesn't work
+        'url': 'turn:198.199.78.57:2222?transport=udp', 
+        'username':'username', 
+        'credential': 'password'
+    };   
 
 var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
 
@@ -29,26 +28,9 @@ var sdpConstraints = {'mandatory': {
 /////////////////////////////////////////////
 
 function updateTurn(callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                var turnServer = JSON.parse(xhr.responseText);
-                console.log('Got TURN server: ', turnServer);
-                pc_config.iceServers.push({
-                    'url': turnServer.uris[0],
-                    'username': turnServer.username,
-                    'credential': turnServer.password
-                });
-            } else {
-                console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
-                pc_config.iceServers.push(hardcoded);
-            }
+            console.log("Using WAT-TURN as TURN server");
+            pc_config.iceServers.push(hardcoded);
             callback();
-        }
-    };
-    xhr.open('GET', 'turnserver', true);
-    xhr.send();
 }
 var socket = io.connect();
 
@@ -243,10 +225,13 @@ function handleRemoteStreamAdded(event) {
     window.remote = event;
     remoteAudio.src = window.URL.createObjectURL(event.stream);
     remoteStream = event.stream;
+    document.getElementById("submit").innerHTML = "CONNECTED";
 }
 
 function handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
+    document.getElementById("submit").innerHTML = "RECONNECT";
+    document.getElementById("code").disabled = false;
 }
 
 function hangup() {

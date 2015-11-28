@@ -13,34 +13,17 @@
     var lastClient = null;
 
     var hardcoded = {
-            'url': 'turn:162.222.183.171:3478?transport=udp', 
-            'username':'1445297176:41784574', 
-            'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
-        };   // can update with new info from https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913
-             // only used if for some reason automatic fetch doesn't work
+            'url': 'turn:198.199.78.57:2222?transport=udp', 
+            'username':'username', 
+            'credential': 'password'
+        };
 
     function updateTurn(callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    var turnServer = JSON.parse(xhr.responseText);
-                    console.log('Got TURN server: ', turnServer);
-                    config.iceServers.push({
-                        'url': turnServer.uris[0],
-                        'username': turnServer.username,
-                        'credential': turnServer.password
-                    });
-                } else {
-                    console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
-                    config.iceServers.push(hardcoded);
-                }
+                console.log("Using WAT-TURN as TURN server");
+                pc_config.iceServers.push(hardcoded);
                 callback();
-            }
-        };
-        xhr.open('GET', 'http://wat.hpp3.com/turnserver', true);
-        xhr.send();
     }
+
     updateTurn(function() {
         turnReady = true;
     });
