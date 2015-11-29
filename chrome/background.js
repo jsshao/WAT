@@ -3,44 +3,18 @@
 (function() {
     var activeTab = -1;
     var audioStream = null;
-    var url = 'http://wat.hpp3.com';
+    // var url = 'http://wat.hpp3.com/';
+    var url = 'http://159.203.114.155:80/';
     var socket = io.connect(url);
 
-    var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
-    var turnReady = false;
+    var turn_server = {
+        'url': 'turn:198.199.78.57:2222?transport=udp', 
+        'username':'username', 
+        'credential': 'password'
+    };
+    var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, turn_server]};
 
-    var hardcoded = {
-            'url': 'turn:162.222.183.171:3478?transport=udp', 
-            'username':'1445297176:41784574', 
-            'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
-        };   // can update with new info from https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913
-             // only used if for some reason automatic fetch doesn't work
-
-    function updateTurn(callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    var turnServer = JSON.parse(xhr.responseText);
-                    console.log('Got TURN server: ', turnServer);
-                    config.iceServers.push({
-                        'url': turnServer.uris[0],
-                        'username': turnServer.username,
-                        'credential': turnServer.password
-                    });
-                } else {
-                    console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
-                    config.iceServers.push(hardcoded);
-                }
-                callback();
-            }
-        };
-        xhr.open('GET', 'http://wat.hpp3.com/turnserver', true);
-        xhr.send();
-    }
-    updateTurn(function() {
-        turnReady = true;
-    });
+    var lastClient = null;
 
     var pc;
     var usersConnected;
@@ -57,7 +31,7 @@
         started = false;
 
         currentRoom = code.join('');
-        console.log('created room', currentRoom);
+        console.log('creating room', currentRoom);
         socket.emit('create room', currentRoom);
         alert("Use the code "+currentRoom+" at "+url+" to connect");
     }
@@ -66,13 +40,38 @@
         socket.emit('message', message);
     }
 
-    socket.on('join', function(room) {
+    function sendMessageTo(id, message) {
+        socket.emit('messageTo', [message, id]);
+    }
+
+    socket.on('join', function(who) {
         usersConnected += 1;
+        lastClient = who;
         maybeStart();
-        console.log('user joined the room ', room, ', population: ', usersConnected);
+        console.log('user', who, 'joined the room, population:', usersConnected);
     });
 
     socket.on('message', function (message) {
+        console.log('received message: ', message);
+        if (message.type === 'answer' && started) {
+            pc.setRemoteDescription(new RTCSessionDescription(message)); 
+        } else if (message.type === 'candidate' && started) {
+            var candidate = new RTCIceCandidate({
+                sdpMLineIndex: message.label,
+                candidate: message.candidate
+            });
+            pc.addIceCandidate(candidate);
+        } else if (message === 'bye' && started) {
+            usersConnected -= 1;
+            console.log('user left, now ', usersConnected, ' remaining');
+        } else if (message === 'got user media') {
+            maybeStart();
+        }
+    });
+    socket.on('message_v2', function (obj) {
+        console.log('received obj: ', obj);
+        var message = obj[0]; 
+        var id = obj[1];
         console.log('received message: ', message);
         if (message.type === 'answer' && started) {
             pc.setRemoteDescription(new RTCSessionDescription(message)); 
@@ -107,7 +106,8 @@
     function handleIceCandidate(event) {
         console.log('handleIceCandidate event: ', event);
         if (event.candidate) {
-            sendMessage({
+            // sendMessage({
+            sendMessageTo(lastClient, {
                 type: 'candidate',
                 label: event.candidate.sdpMLineIndex,
                 id: event.candidate.sdpMid,
@@ -153,8 +153,9 @@
 
     function handleLocalDescription(sessionDescription) {
         pc.setLocalDescription(sessionDescription);
-        console.log('handle local session description', sessionDescription);
-        sendMessage(sessionDescription);
+        console.log('handle local session description', sessionDescription, 'to', lastClient);
+        sendMessageTo(lastClient, sessionDescription);
+        // sendMessage(sessionDescription);
     }
 
     function handleCreateOfferError(e) {
@@ -237,32 +238,30 @@
     }
 
     chrome.browserAction.onClicked.addListener(function (tab) {
-        if (turnReady) {
-            chrome.tabCapture.getCapturedTabs(function (tabs) {
-                if (audioStream != null) {
-                    console.log("stopping capture");
-                    var tracks = audioStream.getTracks();
-                    tracks.forEach(function(track) {
-                        track.stop();
-                    });
-                    if (activeTab == tab.id) {
-                        activeTab = -1;
-                        return;   
-                    }
-                };
-                console.log("capturing");
-                chrome.tabCapture.capture({'audio':true, 'video':false}, function (stream) {
-                    audioStream = stream;
-                    audioStream.onended = function(evt) {
-                        chrome.browserAction.setIcon({path:"icon.png"});
-                        hangup();
-                        audioStream = null;
-                    };
-                    chrome.browserAction.setIcon({path:"playing.png"});
-                    activeTab = tab.id;
-                    handleStream();
+        chrome.tabCapture.getCapturedTabs(function (tabs) {
+            if (audioStream != null) {
+                console.log("stopping capture");
+                var tracks = audioStream.getTracks();
+                tracks.forEach(function(track) {
+                    track.stop();
                 });
+                if (activeTab == tab.id) {
+                    activeTab = -1;
+                    return;   
+                }
+            };
+            console.log("capturing");
+            chrome.tabCapture.capture({'audio':true, 'video':false}, function (stream) {
+                audioStream = stream;
+                audioStream.onended = function(evt) {
+                    chrome.browserAction.setIcon({path:"icon.png"});
+                    hangup();
+                    audioStream = null;
+                };
+                chrome.browserAction.setIcon({path:"playing.png"});
+                activeTab = tab.id;
+                handleStream();
             });
-        }
+        });
     });
 })();

@@ -5,19 +5,9 @@ var sys = require('sys');
 var exec = require('child_process').exec;
 var lastUpdate = 0;
 var app = http.createServer(function (req, res) {
-    req.addListener('end', function () {
-        var now = Date.now();
-        if (now - lastUpdate > 30000) {
-            console.log("updating turnserver");
-            exec('curl "https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913" > turnserver', function(error, stdout, stderr) {
-                file.serve(req, res);
-            });
-            lastUpdate = now;
-        } else {
-            file.serve(req, res);
-        }
-    }).resume(); 
+    file.serve(req, res);
 }).listen(80);
+// }).listen(2015);
 
 var io = require('socket.io').listen(app);
 
@@ -26,24 +16,30 @@ var users = {};
 
 io.sockets.on('connection', function (socket){
 
-	function log() {
-		var array = [">>> Message from server: "];
-	  for (var i = 0; i < arguments.length; i++) {
-	  	array.push(arguments[i]);
-	  }
-	    socket.emit('log', array);
-	}
+	console.log( 'new connection established' );
+
+	var log = function() {
+        console.log(arguments);
+	};
 
 	socket.on('message', function (message) {
         var room = users[socket.id];
-		log('Got message: ', message, ', room: ', room);
-		io.sockets.in(room).emit('message', message);
+        log('ROOM: '+ room+ ', message:'+ message, ' from '+ socket.id+ ' to all');
+		io.sockets.in(room).emit('message_v2', [message, socket.id]);
+		// io.sockets.in(room).emit('message', message);
+	});
+
+	socket.on('messageTo', function (obj) {
+        var message = obj[0];
+        var id = obj[1];
+        var room = users[socket.id];
+        io.to(id).emit('message_v2', [message, socket.id]);
 	});
 
 	socket.on('create room', function (room) {
-		var numClients = io.sockets.clients(room).length;
+		//var numClients = io.sockets.clients(room).length;
 
-		log('Room ' + room + ' has ' + numClients + ' client(s)');
+		//log('Room ' + room + ' has ' + numClients + ' client(s)');
 		log('Request to create room', room);
         log('debug info: ' + rooms[room] + ' ' + JSON.stringify(rooms));
 
@@ -61,15 +57,15 @@ io.sockets.on('connection', function (socket){
 
 	});
 	socket.on('join room', function (room) {
-		var numClients = io.sockets.clients(room).length;
+		//var numClients = io.sockets.clients(room).length;
 
-		log('Room ' + room + ' has ' + numClients + ' client(s)');
+		//log('Room ' + room + ' has ' + numClients + ' client(s)');
 		log('Request to join room', room);
         log('debug info: ' + rooms[room] + ' ' + JSON.stringify(rooms));
 
 		if (rooms[room] == 'created') {
             users[socket.id] = room;
-            io.sockets.in(room).emit('join', room);
+            io.sockets.in(room).emit('join', socket.id);
 			socket.join(room);
 			socket.emit('joined', room);
 		} else { 

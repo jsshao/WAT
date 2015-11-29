@@ -7,15 +7,14 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
+var url = '159.203.114.155:80';
 
-var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
-
-var hardcoded = {
-        'url': 'turn:162.222.183.171:3478?transport=udp', 
-        'username':'1445297176:41784574', 
-        'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
-    };   // can update with new info from https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913
-         // only used if for some reason automatic fetch doesn't work
+var turn_server = {
+    'url': 'turn:198.199.78.57:2222?transport=udp', 
+    'username':'username', 
+    'credential': 'password'
+};   
+var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, turn_server]};
 
 var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
 
@@ -26,33 +25,7 @@ var sdpConstraints = {'mandatory': {
 
 /////////////////////////////////////////////
 
-function updateTurn(callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                var turnServer = JSON.parse(xhr.responseText);
-                console.log('Got TURN server: ', turnServer);
-                pc_config.iceServers.push({
-                    'url': turnServer.uris[0],
-                    'username': turnServer.username,
-                    'credential': turnServer.password
-                });
-            } else {
-                console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
-                pc_config.iceServers.push(hardcoded);
-            }
-            callback();
-        }
-    };
-    xhr.open('GET', 'http://wat.hpp3.com/turnserver', true);
-    xhr.send();
-}
 var socket = io.connect();
-
-updateTurn(function() {
-    console.log('hi');
-});
 
 var room = location.pathname.substring(1);
 
@@ -118,6 +91,31 @@ function sendMessage(message){
     socket.emit('message', message);
 }
 
+socket.on('message_v2', function (obj){
+    console.log('client received obj: ', obj);
+    var message = obj[0]; 
+    var id = obj[1];
+    console.log('client received message: ', message);
+    if (message === 'got user media') {
+        maybeStart();
+    } else if (message.type === 'offer') {
+        if (!isStarted) {
+            maybeStart();
+        }
+        pc.setRemoteDescription(new RTCSessionDescription(message));
+        doAnswer();
+    } else if (message.type === 'answer' && isStarted) {
+        pc.setRemoteDescription(new RTCSessionDescription(message));
+    } else if (message.type === 'candidate' && isStarted) {
+        var candidate = new RTCIceCandidate({
+            sdpMLineIndex: message.label,
+            candidate: message.candidate
+        });
+        pc.addIceCandidate(candidate);
+    } else if (message === 'bye' && isStarted) {
+        handleRemoteHangup();
+    }
+});
 socket.on('message', function (message){
     console.log('Client received message:', message);
     if (message === 'got user media') {
@@ -149,6 +147,7 @@ var remoteAudio = document.querySelector('#remoteAudio');
 
 function maybeStart() {
     if (!isStarted && isChannelReady) {
+        console.log("We are starting!");
         createPeerConnection();
         isStarted = true;
     }
@@ -215,10 +214,15 @@ function handleRemoteStreamAdded(event) {
     window.remote = event;
     remoteAudio.src = window.URL.createObjectURL(event.stream);
     remoteStream = event.stream;
+    document.getElementById("submit").innerHTML = "CONNECTED";
 }
 
 function handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
+    var submit = document.getElementById("submit");
+    submit.innerHTML = "RECONNECT";
+    submit.style.pointerEvents = 'auto';
+    document.getElementById("code").disabled = false;
 }
 
 function hangup() {
@@ -228,8 +232,11 @@ function hangup() {
 }
 
 function handleRemoteHangup() {
-    // stop();
-    // alert("Remote side hung up. Please recreate the room and refresh.");
+    console.log("Remote side hung up. Please recreate the room and reconnect");
+    var submit = document.getElementById("submit");
+    submit.innerHTML = "RECONNECT";
+    submit.style.pointerEvents = 'auto';
+    document.getElementById("code").disabled = false;
 }
 
 function stop() {
