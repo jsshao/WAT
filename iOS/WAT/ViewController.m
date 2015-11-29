@@ -28,6 +28,8 @@
 #import "RTCVideoCapturer.h"
 #import "RTCSessionDescriptionDelegate.h"
 
+#import "WAT-Swift.h"
+
 @interface ViewController () <RTCPeerConnectionDelegate, RTCSessionDescriptionDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
@@ -48,6 +50,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //swift
+//    SocketIOClient* socket = [[SocketIOClient alloc] initWithSocketURL:@"159.203.114.155" options:@{}];
+//    
+//    [socket on:@"connect" callback:^(NSArray* data, SocketAckEmitter* ack) {
+//        NSLog(@"socket connected");
+//    }];
+//    
+//    [socket connect];
     
     _socketIO = [[SocketIO alloc] initWithDelegate:self];
     [_socketIO connectToHost:@"159.203.114.155" onPort:80];
@@ -92,44 +103,44 @@
     if([packet.name isEqualToString:@"message"]) {
         NSArray* args = packet.args;
         NSDictionary* arg = args[0];
-//        NSString *msg = arg[0];
-//        
-//        if ([msg isEqualToString:@"got user media"]) {
-//            NSLog(@"socketIO got user media");
-//            [self maybeStart];
-//        } else if ([msg isEqualToString:@"offer"]) {
-//            NSLog(@"socketIO offer");
-//            if (!self.isStarted) {
-//                [self maybeStart];
-//            }
-//            NSString *sdpString = [args objectForKey:@"sdp"];
-//            RTCSessionDescription *sdp = [[RTCSessionDescription alloc]
-//                                          initWithType:msg sdp:[self preferISAC:sdpString]];
-//            [self.peerConnection setRemoteDescriptionWithDelegate:self sessionDescription:sdp];
-//        } else if ([msg isEqualToString:@"candidate"]) {
-//            NSLog(@"socketIO candidate");
-//            NSString *mid = [arg objectForKey:@"id"];
-//            NSNumber *sdpLineIndex = [arg objectForKey:@"label"];
-//            NSString *sdp = [arg objectForKey:@"candidate"];
-//            RTCICECandidate *candidate =
-//            [[RTCICECandidate alloc] initWithMid:mid
-//                                           index:sdpLineIndex.intValue
-//                                             sdp:sdp];
-//            [self.candidates addObject:candidate];
-//            [self.peerConnection createAnswerWithDelegate:self constraints:self.sdpConstraints];
-//        } else if ([msg isEqualToString:@"answer"]) {
-//            NSLog(@"socketIO answer");
-//            NSString *sdpString = [args objectForKey:@"sdp"];
-//            RTCSessionDescription *sdp = [[RTCSessionDescription alloc]
-//                                          initWithType:msg sdp:[self preferISAC:sdpString]];
-//            [self.peerConnection setRemoteDescriptionWithDelegate:self sessionDescription:sdp];
-//        } else if ([msg isEqualToString:@"join"]) {
-//            NSLog(@"socketIO join");
-//            self.isChannelReady = YES;
-//        } else if ([msg isEqualToString:@"bye"]) {
-//            NSLog(@"socketIO bye");
-//            [self disconnect];
-//        }
+        NSString *msg = arg[0];
+        
+        if ([msg isEqualToString:@"got user media"]) {
+            NSLog(@"socketIO got user media");
+            [self maybeStart];
+        } else if ([msg isEqualToString:@"offer"]) {
+            NSLog(@"socketIO offer");
+            if (!self.isStarted) {
+                [self maybeStart];
+            }
+            NSString *sdpString = [args objectForKey:@"sdp"];
+            RTCSessionDescription *sdp = [[RTCSessionDescription alloc]
+                                          initWithType:msg sdp:[self preferISAC:sdpString]];
+            [self.peerConnection setRemoteDescriptionWithDelegate:self sessionDescription:sdp];
+        } else if ([msg isEqualToString:@"candidate"]) {
+            NSLog(@"socketIO candidate");
+            NSString *mid = [arg objectForKey:@"id"];
+            NSNumber *sdpLineIndex = [arg objectForKey:@"label"];
+            NSString *sdp = [arg objectForKey:@"candidate"];
+            RTCICECandidate *candidate =
+            [[RTCICECandidate alloc] initWithMid:mid
+                                           index:sdpLineIndex.intValue
+                                             sdp:sdp];
+            [self.candidates addObject:candidate];
+            [self.peerConnection createAnswerWithDelegate:self constraints:self.sdpConstraints];
+        } else if ([msg isEqualToString:@"answer"]) {
+            NSLog(@"socketIO answer");
+            NSString *sdpString = [args objectForKey:@"sdp"];
+            RTCSessionDescription *sdp = [[RTCSessionDescription alloc]
+                                          initWithType:msg sdp:[self preferISAC:sdpString]];
+            [self.peerConnection setRemoteDescriptionWithDelegate:self sessionDescription:sdp];
+        } else if ([msg isEqualToString:@"join"]) {
+            NSLog(@"socketIO join");
+            self.isChannelReady = YES;
+        } else if ([msg isEqualToString:@"bye"]) {
+            NSLog(@"socketIO bye");
+            [self disconnect];
+        }
     }
 }
 
