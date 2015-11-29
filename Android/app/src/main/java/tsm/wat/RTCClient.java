@@ -1,6 +1,8 @@
 package tsm.wat;
 
+import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -40,11 +42,15 @@ public class RTCClient {
     private MediaConstraints pcConstraints = new MediaConstraints();
     private MediaConstraints sdpConstraints = new MediaConstraints();
     private PeerConnectionParameters pcParams;
+    private Activity mActivity;
     private boolean isStarted = false, isChannelReady = false;
 
-    public RTCClient(Context context, PeerConnectionParameters params, StreamListener streamListener) {
+    public RTCClient(Activity context, StreamListener streamListener) {
+        AudioManager audioManager;
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setSpeakerphoneOn(true);
         mStreamListener = streamListener;
-        pcParams = params;
+        mActivity = context;
         try {
             mSocket = IO.socket("http://159.203.114.155:80");
         } catch (URISyntaxException e) {
@@ -53,7 +59,7 @@ public class RTCClient {
 
         Listeners listeners = new Listeners();
         PeerConnectionFactory.initializeAndroidGlobals(context, true, true,
-                params.videoCodecHwAcceleration, VideoRendererGui.getEGLContext());
+                true, VideoRendererGui.getEGLContext());
         factory = new PeerConnectionFactory();
 
         mSocket.on(Socket.EVENT_CONNECT_ERROR, listeners.connectErrorListener);
@@ -117,7 +123,8 @@ public class RTCClient {
                         // offer == we got an offer, create an answer to the offer
                         Log.d(TAG,"Offer message");
                         Peer peer = maybeStart(id);
-                        ReceiveObserver receiveObserver = new ReceiveObserver();
+                        peers.put(id, peer);
+                        ReceiveObserver receiveObserver = new ReceiveObserver(id);
                         SessionDescription sdp = new SessionDescription(
                                 SessionDescription.Type.fromCanonicalForm(data.getString("type")),
                                 data.getString("sdp")
@@ -128,7 +135,8 @@ public class RTCClient {
                         }
                     } else if (type.equals("candidate")) {
                         Log.d(TAG,"AddIceCandidateCommand");
-                        PeerConnection pc = peers.get(id).pc;
+//                        if (! peers.containsKey(id)) return;
+                        PeerConnection pc = peers.values().iterator().next().pc;
                         if (pc.getRemoteDescription() != null) {
                             IceCandidate candidate = new IceCandidate(
                                     id,
@@ -137,20 +145,6 @@ public class RTCClient {
                             );
                             pc.addIceCandidate(candidate);
                         }
-                    } else if (type.equals("answer")) {
-                        // offer == got an answer back after we make an offer, now we can set remote SDP Command
-                        Log.d(TAG,"CreateAnswerCommand");
-                        ReceiveObserver receiveObserver = new ReceiveObserver();
-                        Peer peer = peers.get(id);
-                        SessionDescription sdp = new SessionDescription(
-                                SessionDescription.Type.fromCanonicalForm(data.getString("type")),
-                                data.getString("sdp")
-                        );
-                        peer.pc.setRemoteDescription(receiveObserver, sdp);
-                        peer.pc.createAnswer(receiveObserver, pcConstraints);
-                    } else if (type.equals("init")) {
-                        // init == client creates an offer to send to peer
-                        Log.d(TAG,"INIT, SHOULDNT HAPPEN");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -189,26 +183,38 @@ public class RTCClient {
 
 
     private class ReceiveObserver implements SdpObserver {
-        public ReceiveObserver() {
+        private String id;
+        public ReceiveObserver(String id) {
+            this.id = id;
         }
 
         @Override
         public void onCreateSuccess(SessionDescription sdp) {
+            Log.d(TAG, "Create success" + sdp.toString());
+            try {
+                JSONObject payload = new JSONObject();
+                payload.put("type", sdp.type.canonicalForm());
+                payload.put("sdp", sdp.description);
+                sendMessage(payload);
+                peers.get(id).pc.setLocalDescription(this, sdp);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onSetSuccess() {
-
+            Log.d(TAG, "Set success");
         }
 
         @Override
         public void onCreateFailure(String s) {
-
+            Log.d(TAG, "Create failure" + s);
         }
 
         @Override
         public void onSetFailure(String s) {
-
+            Log.d(TAG, "Set failure" + s);
         }
     }
 
@@ -248,11 +254,24 @@ public class RTCClient {
         }
 
         @Override
-        public void onAddStream(MediaStream mediaStream) {
+        public void onAddStream(final MediaStream mediaStream) {
             Log.d(TAG,"onAddStream "+mediaStream.label());
-            AudioTrack track = mediaStream.audioTracks.get(0);
-            track.setEnabled(true);
-            track.setState(MediaStreamTrack.State.LIVE);
+            RuntimeException e = new RuntimeException();
+            e.printStackTrace();
+
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AudioTrack track = mediaStream.audioTracks.get(0);
+                    track.setEnabled(true);
+                    track.setState(MediaStreamTrack.State.LIVE);
+                }
+            });
+
+
+
+
+
 //            mStreamListener.OnStreamAdded(mediaStream);
             // remote streams are displayed from 1 to MAX_PEER (0 is localStream)
 //            mListener.onAddRemoteStream(mediaStream, endPoint+1);

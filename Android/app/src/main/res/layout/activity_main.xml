@@ -4,29 +4,25 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingBottom="55dp"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
-    <android.opengl.GLSurfaceView
-        android:id="@+id/glview_call"
-        android:layout_width="10dp"
-        android:layout_height="10dp" />
-    <android.view.SurfaceView
-        android:id="@+id/preview"
-        android:layout_width="10dp"
-        android:layout_height="10dp" />
 
     <!--<include layout="@layout/toolbar"/>-->
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:hint="ROOM NUMBER"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:hint="ROOM ID"
         android:id="@+id/roomEditText"/>
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:background="#363346"
+        android:textColor="#FFFFFF"
         android:id="@+id/connectBtn"
         android:text="Connect"/>
 </LinearLayout>
