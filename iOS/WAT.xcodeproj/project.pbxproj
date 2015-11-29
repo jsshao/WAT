@@ -20,7 +20,6 @@
 		019FC18E1C098D2700956B9C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC18D1C098D2700956B9C /* Security.framework */; };
 		019FC1901C098D3100956B9C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC18F1C098D3100956B9C /* CFNetwork.framework */; };
 		019FC1921C098D3B00956B9C /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1911C098D3B00956B9C /* GLKit.framework */; };
-		019FC1941C098D4D00956B9C /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1931C098D4D00956B9C /* libstdc++.6.tbd */; };
 		019FC1961C098D5500956B9C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1951C098D5500956B9C /* AudioToolbox.framework */; };
 		019FC1981C098D5B00956B9C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1971C098D5B00956B9C /* AVFoundation.framework */; };
 		019FC19A1C098D6700956B9C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1991C098D6700956B9C /* CoreAudio.framework */; };
@@ -71,6 +70,8 @@
 		019FC2111C0A130C00956B9C /* AppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 019FC1591C09620300956B9C /* AppDelegate.h */; };
 		019FC2321C0A2AC800956B9C /* libWebRTC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC1EF1C09CEF700956B9C /* libWebRTC.a */; };
 		019FC2391C0A775100956B9C /* RTCSessionDescriptionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 019FC2371C0A76B600956B9C /* RTCSessionDescriptionDelegate.h */; };
+		019FC23A1C0A909A00956B9C /* libWebRTC.a in Sources */ = {isa = PBXBuildFile; fileRef = 019FC1EF1C09CEF700956B9C /* libWebRTC.a */; };
+		019FC23C1C0B503200956B9C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019FC23B1C0B503200956B9C /* VideoToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,6 +194,7 @@
 		019FC1EE1C09CE8500956B9C /* RTCVideoTrack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCVideoTrack.h; sourceTree = "<group>"; };
 		019FC1EF1C09CEF700956B9C /* libWebRTC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWebRTC.a; sourceTree = "<group>"; };
 		019FC2371C0A76B600956B9C /* RTCSessionDescriptionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCSessionDescriptionDelegate.h; sourceTree = "<group>"; };
+		019FC23B1C0B503200956B9C /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +202,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019FC23C1C0B503200956B9C /* VideoToolbox.framework in Frameworks */,
 				019FC1A61C098D9C00956B9C /* libsqlite3.tbd in Frameworks */,
 				019FC1A41C098D8C00956B9C /* QuartzCore.framework in Frameworks */,
 				019FC1A21C098D8600956B9C /* OpenGLES.framework in Frameworks */,
@@ -210,7 +213,6 @@
 				019FC1981C098D5B00956B9C /* AVFoundation.framework in Frameworks */,
 				019FC1961C098D5500956B9C /* AudioToolbox.framework in Frameworks */,
 				019FC2321C0A2AC800956B9C /* libWebRTC.a in Frameworks */,
-				019FC1941C098D4D00956B9C /* libstdc++.6.tbd in Frameworks */,
 				019FC1921C098D3B00956B9C /* GLKit.framework in Frameworks */,
 				019FC1901C098D3100956B9C /* CFNetwork.framework in Frameworks */,
 				019FC18E1C098D2700956B9C /* Security.framework in Frameworks */,
@@ -239,6 +241,7 @@
 		019FC14A1C09620300956B9C = {
 			isa = PBXGroup;
 			children = (
+				019FC23B1C0B503200956B9C /* VideoToolbox.framework */,
 				019FC1A51C098D9C00956B9C /* libsqlite3.tbd */,
 				019FC1A31C098D8C00956B9C /* QuartzCore.framework */,
 				019FC1A11C098D8600956B9C /* OpenGLES.framework */,
@@ -554,6 +557,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019FC23A1C0A909A00956B9C /* libWebRTC.a in Sources */,
 				019FC1CE1C09AC6500956B9C /* NSData+SRB64Additions.m in Sources */,
 				019FC15E1C09620300956B9C /* ViewController.m in Sources */,
 				019FC1BA1C09A88A00956B9C /* SocketIOTransportXHR.m in Sources */,
@@ -704,12 +708,13 @@
 		019FC1811C09620300956B9C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/../public";
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = /Users/frank/Desktop/WAT/iOS/WAT;
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(BUILT_PRODUCTS_DIR)";
 				INFOPLIST_FILE = WAT/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "";
-				LIBRARY_SEARCH_PATHS = /Users/frank/Desktop/tools/new;
+				LIBRARY_SEARCH_PATHS = /Users/frank/Desktop/WAT/iOS/WAT;
 				ONLY_ACTIVE_ARCH = NO;
 				"OTHER_LDFLAGS[arch=*]" = "-stdlib=libstdc++";
 				PRODUCT_BUNDLE_IDENTIFIER = jdeng.WAT;
@@ -721,12 +726,14 @@
 		019FC1821C09620300956B9C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/../public";
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = /Users/frank/Desktop/WAT/iOS/WAT;
 				INFOPLIST_FILE = WAT/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "";
-				LIBRARY_SEARCH_PATHS = /Users/frank/Desktop/tools/new;
-				"OTHER_LDFLAGS[arch=*]" = "-lWebRTC";
+				LIBRARY_SEARCH_PATHS = /Users/frank/Desktop/WAT/iOS/WAT;
+				ONLY_ACTIVE_ARCH = NO;
+				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jdeng.WAT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = armv7;

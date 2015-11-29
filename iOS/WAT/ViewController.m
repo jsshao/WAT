@@ -26,7 +26,6 @@
 #import "RTCSessionDescription.h"
 #import "RTCVideoRenderer.h"
 #import "RTCVideoCapturer.h"
-#import "RTCVideoTrack.h"
 #import "RTCSessionDescriptionDelegate.h"
 
 @interface ViewController () <RTCPeerConnectionDelegate, RTCSessionDescriptionDelegate>
@@ -67,8 +66,8 @@
                           optionalConstraints:@[]];
     
     RTCICEServer *ICEServer = [[RTCICEServer alloc] initWithURI:[NSURL URLWithString:@"stun:stun.l.google.com:19302"]
-                                                       username:nil
-                                                       password:nil];
+                                                       username:@""
+                                                       password:@""];
     NSLog(@"Added ICE Server: %@", ICEServer);
     [self.iceServers addObject:ICEServer];
     
