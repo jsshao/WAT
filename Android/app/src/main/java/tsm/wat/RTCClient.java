@@ -3,6 +3,7 @@ package tsm.wat;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webrtc.AudioTrack;
@@ -39,6 +40,7 @@ public class RTCClient {
     private MediaConstraints pcConstraints = new MediaConstraints();
     private MediaConstraints sdpConstraints = new MediaConstraints();
     private PeerConnectionParameters pcParams;
+    private boolean isStarted = false, isChannelReady = false;
 
     public RTCClient(Context context, PeerConnectionParameters params, StreamListener streamListener) {
         mStreamListener = streamListener;
@@ -57,19 +59,15 @@ public class RTCClient {
         mSocket.on(Socket.EVENT_CONNECT_ERROR, listeners.connectErrorListener);
         mSocket.on("joined", listeners.joinListener);
         mSocket.on("connect", listeners.connectedListener);
-        mSocket.on("message", listeners.onMessageListener);
+        mSocket.on("message_v2", listeners.onMessageListener);
         mSocket.connect();
 
         iceServers.add(new PeerConnection.IceServer("stun:stun.l.google.com:19302"));
-        updateTurn();
+        iceServers.add(new PeerConnection.IceServer("turn:198.199.78.57:2222?transport=udp", "username", "password"));
 
         sdpConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
         sdpConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
-    }
-
-    private void updateTurn() {
-        iceServers.add(new PeerConnection.IceServer("turn:162.222.183.171:3478?transport=udp", "1445297176:41784574", "VYyTBdH7bm/jpFt6PikqKwlopUE="));
     }
 
     public void joinRoom(String name) {
@@ -93,6 +91,7 @@ public class RTCClient {
             @Override
             public void call(Object... args) {
                 Log.d("=======================================================", "Joined the room");
+                isChannelReady = true;
             }
         };
 
@@ -106,40 +105,43 @@ public class RTCClient {
         public Emitter.Listener onMessageListener = new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
+                JSONArray dataArray = (JSONArray) args[0];
                 try {
-                    Log.d("==", data.toString());
-                    String from = "1"; //data.getString("from");
+                    String id = dataArray.getString(1);
+                    JSONObject data = dataArray.getJSONObject(0);
                     String type = data.getString("type");
 
-                    if (type.equals("candidate")) {
+                    if (type.equals("got user media")) {
+                        maybeStart(id);
+                    } else if (type.equals("offer")) {
+                        // offer == we got an offer, create an answer to the offer
+                        Log.d(TAG,"Offer message");
+                        Peer peer = maybeStart(id);
+                        ReceiveObserver receiveObserver = new ReceiveObserver();
+                        SessionDescription sdp = new SessionDescription(
+                                SessionDescription.Type.fromCanonicalForm(data.getString("type")),
+                                data.getString("sdp")
+                        );
+                        if ( peer != null ) {
+                            peer.pc.setRemoteDescription(receiveObserver, sdp);
+                            peer.pc.createAnswer(receiveObserver, sdpConstraints);
+                        }
+                    } else if (type.equals("candidate")) {
                         Log.d(TAG,"AddIceCandidateCommand");
-                        PeerConnection pc = peers.get(from).pc;
+                        PeerConnection pc = peers.get(id).pc;
                         if (pc.getRemoteDescription() != null) {
                             IceCandidate candidate = new IceCandidate(
-                                    from,
+                                    id,
                                     data.getInt("label"),
                                     data.getString("candidate")
                             );
                             pc.addIceCandidate(candidate);
                         }
-                    } else if (type.equals("offer")) {
-                        // offer == we got an offer, create an answer to the offer
-                        Log.d(TAG,"Offer message");
-                        ReceiveObserver receiveObserver = new ReceiveObserver();
-                        Peer peer = addPeer(from);
-
-                        SessionDescription sdp = new SessionDescription(
-                                SessionDescription.Type.fromCanonicalForm(data.getString("type")),
-                                data.getString("sdp")
-                        );
-                        peer.pc.setRemoteDescription(receiveObserver, sdp);
-                        peer.pc.createAnswer(receiveObserver, sdpConstraints);
                     } else if (type.equals("answer")) {
                         // offer == got an answer back after we make an offer, now we can set remote SDP Command
                         Log.d(TAG,"CreateAnswerCommand");
                         ReceiveObserver receiveObserver = new ReceiveObserver();
-                        Peer peer = peers.get(from);
+                        Peer peer = peers.get(id);
                         SessionDescription sdp = new SessionDescription(
                                 SessionDescription.Type.fromCanonicalForm(data.getString("type")),
                                 data.getString("sdp")
@@ -157,7 +159,18 @@ public class RTCClient {
         };
     }
 
+    private Peer maybeStart(String id) {
+        if (!isStarted && isChannelReady) {
+            Peer peer = addPeer(id);
+            peers.put(id, peer);
+            isStarted = true;
+            return peer;
+        }
+        return null;
+    }
+
     public void sendMessage(JSONObject msg) throws JSONException {
+        Log.d(TAG, "Sending message " + msg.toString());
         mSocket.emit("message", msg);
     }
 
@@ -177,7 +190,6 @@ public class RTCClient {
 
     private class ReceiveObserver implements SdpObserver {
         public ReceiveObserver() {
-
         }
 
         @Override
@@ -205,10 +217,13 @@ public class RTCClient {
         private String id;
 
         @Override
-        public void onSignalingChange(PeerConnection.SignalingState signalingState) {}
+        public void onSignalingChange(PeerConnection.SignalingState signalingState) {
+            Log.d(TAG, "Signalling state changed" + signalingState.toString());
+        }
 
         @Override
         public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
+            Log.d(TAG, "Connection state changed " + iceConnectionState.toString());
             if(iceConnectionState == PeerConnection.IceConnectionState.DISCONNECTED) {
 //                removePeer(id);
 //                mListener.onStatusChanged("DISCONNECTED");
@@ -250,7 +265,9 @@ public class RTCClient {
         }
 
         @Override
-        public void onDataChannel(DataChannel dataChannel) {}
+        public void onDataChannel(DataChannel dataChannel) {
+            Log.d(TAG,"data channel "+ dataChannel.label());
+        }
 
         @Override
         public void onRenegotiationNeeded() {}
