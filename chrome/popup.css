@@ -1,0 +1,15 @@
+.box {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+#submit {
+    margin-top: 5px;
+    margin-left: auto; 
+    margin-right: auto; 
+    display:block;
+}
