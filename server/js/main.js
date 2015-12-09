@@ -7,7 +7,8 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
-var url = '159.203.114.155:80';
+var url = 'http://159.203.114.155:80';
+// var url = 'http://wat.hpp3.com/';
 
 var turn_server = {
     'url': 'turn:198.199.78.57:2222?transport=udp', 
@@ -165,12 +166,18 @@ function createPeerConnection() {
         pc.onicecandidate = handleIceCandidate;
         pc.onaddstream = handleRemoteStreamAdded;
         pc.onremovestream = handleRemoteStreamRemoved;
+        pc.oniceconnectionstatechange = handleICEConnectionStateChange;
+        pc.onnegotiationneeded = handleNegotiationNeeded;
         console.log('Created RTCPeerConnnection');
     } catch (e) {
         console.log('Failed to create PeerConnection, exception: ' + e.message);
         alert('Cannot create RTCPeerConnection object.');
         return;
     }
+}
+
+function handleNegotiationNeeded(event) {
+    alert("Client says: Negotiation is needed!");
 }
 
 function handleIceCandidate(event) {
@@ -209,6 +216,30 @@ function setLocalAndSendMessage(sessionDescription) {
     sendMessage(sessionDescription);
 }
 
+function handleICEConnectionStateChange(event) {
+    // console.log(event.target.iceConnectionState);
+    if (event.target.iceConnectionState === 'closed' || event.target.iceConnectionState === 'disconnected') {
+        isStarted = false;
+        sendMessage('bye');
+        submit.innerHTML = "RECONNECTING";
+        reactivate(30, 2000); 
+    }
+    // if (event) 
+}
+
+function reactivate(max_retries, delay) {
+    socket.emit('join room', room);
+    if (!isStarted) {
+        if (max_retries > 0) {
+            setTimeout(reactivate, delay, max_retries - 1, delay);
+        } else {
+            submit.innerHTML = "RECONNECT";
+            submit.style.pointerEvents = 'auto';
+            document.getElementById("code").disabled = false;
+        }
+    }
+}
+
 function handleRemoteStreamAdded(event) {
     console.log('Remote stream added.', event);
     window.remote = event;
@@ -243,6 +274,10 @@ function stop() {
     isStarted = false;
     // isAudioMuted = false;
     // isVideoMuted = false;
+    var submit = document.getElementById("submit");
+    submit.innerHTML = "RECONNECT";
+    submit.style.pointerEvents = 'auto';
+    document.getElementById("code").disabled = false;
     pc.close();
     pc = null;
 }

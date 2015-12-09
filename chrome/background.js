@@ -44,6 +44,7 @@ socket.on('join', function(who) {
     console.log('user', who, 'joined the room, population:', usersConnected);
 });
 
+<<<<<<< HEAD
 socket.on('message', function (message) {
     console.log('received message: ', message);
     if (message.type === 'answer' && started) {
@@ -79,6 +80,38 @@ socket.on('message_v2', function (obj) {
         console.log('user left, now ', usersConnected, ' remaining');
     } else if (message === 'got user media') {
         maybeStart();
+=======
+    function createPeerConnection() {
+        try {
+            pc = new webkitRTCPeerConnection(config);
+            pc.onicecandidate = handleIceCandidate;
+            pc.onaddstream = handleRemoteStreamAdded;
+            pc.onremovestream = handleRemoteStreamRemoved;
+            pc.onnegotiationneeded = handleNegotiationNeeded;
+            console.log('created RTCPeerConnection');
+        } catch (e) {
+            console.log('failed to create PeerConnection with exception: ' + e.message);
+            alert('cannot create RTCPeerConnection object');
+            return;
+        }
+    }
+
+    function handleNegotiationNeeded(event) {
+        console.log("Negotiation is needed!");
+    }
+    function handleIceCandidate(event) {
+        console.log('handleIceCandidate event: ', event);
+        if (event.candidate) {
+            // sendMessage({
+            sendMessageTo(lastClient, {
+                type: 'candidate',
+                label: event.candidate.sdpMLineIndex,
+                id: event.candidate.sdpMid,
+                candidate: event.candidate.candidate});
+        } else {
+            console.log('no more candidates');
+        }
+>>>>>>> background audio in android webclient
     }
 });
 
