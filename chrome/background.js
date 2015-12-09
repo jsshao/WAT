@@ -80,7 +80,7 @@ socket.on('message_v2', function (obj) {
     } else if (message === 'got user media') {
         maybeStart();
     }
-}
+});
 
 function createPeerConnection() {
     try {
