@@ -6,8 +6,7 @@ var exec = require('child_process').exec;
 var lastUpdate = 0;
 var app = http.createServer(function (req, res) {
     file.serve(req, res);
-}).listen(80);
-// }).listen(2015);
+}).listen(2015);
 
 var io = require('socket.io').listen(app);
 

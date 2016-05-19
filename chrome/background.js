@@ -2,14 +2,13 @@
 
 var activeTab = -1;
 var audioStream = null;
-// var url = 'http://wat.hpp3.com/';
-var url = 'http://159.203.114.155:80/';
+var url = 'http://wat.jasonshao.com/';
 var socket = io.connect(url);
 
 var turn_server = {
-    'url': 'turn:198.199.78.57:2222?transport=udp', 
-    'username':'username', 
-    'credential': 'password'
+    'url': 'turn:162.222.183.171:3478?transport=udp', 
+    'username':'1445297176:41784574',
+    'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
 };
 var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, turn_server]};
 
