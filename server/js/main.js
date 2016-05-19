@@ -9,12 +9,15 @@ var remoteStream;
 var turnReady;
 var url = 'http://159.203.233.106:2015/';
 
-var turn_server = {
+var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+
+var hardcoded = {
     'url': 'turn:162.222.183.171:3478?transport=udp', 
-    'username':'1445297176:41784574', 
+    'username':'1445297176:41784574',
     'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
-};   
-var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, turn_server]};
+};
+// can update with new info from https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913
+// only used if for some reason automatic fetch doesn't work
 
 var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
 

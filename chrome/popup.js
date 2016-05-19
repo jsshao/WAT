@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById("submit").addEventListener('click', function() {
         var bgPage = chrome.extension.getBackgroundPage();
-        bgPage.startCapture(room.value);
+        if (bgPage.turnReady) {
+            bgPage.startCapture(room.value);
+        }
     });
 }, false);
