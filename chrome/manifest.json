@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "WAT",
+  "name": "Wireless Audio Transfer",
   "icons": {
     "128": "icon.png"
   },
@@ -16,6 +16,6 @@
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   }, 
-  "description": "This script sends tab audio to an Android device",
+  "description": "This extension allows you to play tab audio on another device.",
   "version": "1.0"
 }

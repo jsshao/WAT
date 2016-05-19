@@ -53,3 +53,5 @@ fabric.properties
 
 turnserver
 server/out
+server/wat.crx
+server/chrome.zip

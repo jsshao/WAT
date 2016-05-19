@@ -6,9 +6,15 @@
     <link rel="stylesheet" type="text/css" href="popup.css">
   </head>
   <body>
-    <h2>WAT</h2>
-    <input class="box" type="text" id="room" autofocus><br>
-    <input class="box" placeholder="No Password" type="password" id="pwd"><br>
-    <input type="submit" id="submit">
+      <h2>WAT</h2>
+      <div id='create-form'>
+          <input class="box" type="text" id="room" autofocus><br>
+          <input class="box" placeholder="No Password" type="password" id="pwd"><br>
+          <input type="submit" id="submit">
+      </div>
+      <div id='playing' class='hidden'>
+          You are currently broadcasting to the room <span id='room-id'></span> at http://wat.hpp3.com/.
+          <input type="submit" id="stop" value="Stop Broadcasting">
+      </div>
   </body>
 </html>

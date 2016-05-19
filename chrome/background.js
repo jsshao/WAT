@@ -19,26 +19,26 @@ var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 var lastClient = null;
 
 function updateTurn(callback) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function(){
-		if (xhr.readyState === 4) {
-			if (xhr.status === 200) {
-				var turnServer = JSON.parse(xhr.responseText);
-				console.log('Got TURN server: ', turnServer);
-				config.iceServers.push({
-					'url': turnServer.uris[0],
-					'username': turnServer.username,
-					'credential': turnServer.password
-				});
-			} else {
-				console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
-				config.iceServers.push(hardcoded);
-			}
-			callback();
-		}
-	};
-	xhr.open('GET', url+'/turnserver', true);
-	xhr.send();
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var turnServer = JSON.parse(xhr.responseText);
+                console.log('Got TURN server: ', turnServer);
+                config.iceServers.push({
+                    'url': turnServer.uris[0],
+                    'username': turnServer.username,
+                    'credential': turnServer.password
+                });
+            } else {
+                console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
+                config.iceServers.push(hardcoded);
+            }
+            callback();
+        }
+    };
+    xhr.open('GET', url+'/turnserver', true);
+    xhr.send();
 }
 
 updateTurn(function() {
@@ -48,15 +48,14 @@ updateTurn(function() {
 var pc;
 var usersConnected;
 var started = false;
-var currentRoom = null;
+var room = null;
 
 function handleStream(currentRoom) {
     usersConnected = 0;
     started = false;
-
+    room = currentRoom;
     console.log('creating room', currentRoom);
     socket.emit('create room', currentRoom);
-    alert("Use the code "+currentRoom+" at "+url+" to connect");
 }
 
 function sendMessage(message) {
@@ -264,6 +263,25 @@ function removeCN(sdpLines, mLineIndex) {
     return sdpLines;
 }
 
+function stopCapture() {
+    chrome.tabCapture.getCapturedTabs(function (tabs) {
+        chrome.tabs.query({active:true,windowType:"normal", currentWindow: true}, 
+            function(tabs) {
+                if (audioStream != null) {
+                    console.log("stopping capture");
+                    var tracks = audioStream.getTracks();
+                    tracks.forEach(function(track) {
+                        track.stop();
+                    });
+                    if (activeTab == tabs[0].id) {
+                        activeTab = -1;
+                        return;   
+                    }
+                };
+            }
+        );
+    });
+}
 
 function startCapture(code) {
     chrome.tabCapture.getCapturedTabs(function (tabs) {
