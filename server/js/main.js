@@ -24,8 +24,34 @@ var sdpConstraints = {'mandatory': {
         'OfferToReceiveVideo':true }};
 
 /////////////////////////////////////////////
+function updateTurn(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var turnServer = JSON.parse(xhr.responseText);
+                console.log('Got TURN server: ', turnServer);
+                pc_config.iceServers.push({
+                    'url': turnServer.uris[0],
+                    'username': turnServer.username,
+                    'credential': turnServer.password
+                });
+            } else {
+                console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
+                pc_config.iceServers.push(hardcoded);
+            }
+            callback();
+        }
+    };
+    xhr.open('GET', '/turnserver', true);
+    xhr.send();
+}
 
 var socket = io.connect();
+
+updateTurn(function() {
+    console.log('hi');
+});
 
 var room = location.pathname.substring(1);
 

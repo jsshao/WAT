@@ -2,17 +2,45 @@
 
 var activeTab = -1;
 var audioStream = null;
-var url = 'http://wat.jasonshao.com/';
+var url = 'http://159.203.233.106:2015/';
 var socket = io.connect(url);
 
-var turn_server = {
+var hard_coded = {
     'url': 'turn:162.222.183.171:3478?transport=udp', 
     'username':'1445297176:41784574',
     'credential': 'VYyTBdH7bm/jpFt6PikqKwlopUE='
 };
-var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, turn_server]};
+
+var config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 
 var lastClient = null;
+
+function updateTurn(callback) {
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (xhr.readyState === 4) {
+			if (xhr.status === 200) {
+				var turnServer = JSON.parse(xhr.responseText);
+				console.log('Got TURN server: ', turnServer);
+				config.iceServers.push({
+					'url': turnServer.uris[0],
+					'username': turnServer.username,
+					'credential': turnServer.password
+				});
+			} else {
+				console.log("could not auto fetch turnserver! using hardcoded (update it yourself)");
+				config.iceServers.push(hardcoded);
+			}
+			callback();
+		}
+	};
+	xhr.open('GET', 'http://wat.jasonshao.com/turnserver', true);
+	xhr.send();
+}
+
+updateTurn(function() {
+    turnReady = true;
+});
 
 var pc;
 var usersConnected;
@@ -25,13 +53,12 @@ function handleStream(currentRoom) {
 
     console.log('creating room', currentRoom);
     socket.emit('create room', currentRoom);
-    alert("Use the code "+currentRoom+" at "+url+" to connect");
+    alert("Use the code "+currentRoom+" at wat.jasonshao.com to connect");
 }
 
 function sendMessage(message) {
     socket.emit('message', message);
 }
-
 function sendMessageTo(id, message) {
     socket.emit('messageTo', [message, id]);
 }
