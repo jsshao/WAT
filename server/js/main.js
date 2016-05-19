@@ -204,7 +204,11 @@ function doCall() {
 
 function doAnswer() {
     console.log('Sending answer to peer.');
-    pc.createAnswer(setLocalAndSendMessage, null, sdpConstraints);
+    pc.createAnswer(setLocalAndSendMessage, handleException, sdpConstraints);
+}
+
+function handleException() {
+    console.log('Failed to execute createAnswer on RTCPeerConnection');
 }
 
 function setLocalAndSendMessage(sessionDescription) {
