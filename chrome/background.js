@@ -2,7 +2,7 @@
 
 var activeTab = -1;
 var audioStream = null;
-var url = 'http://159.203.233.106:2015/';
+var url = 'http://wat.hpp3.com/';
 var socket = io.connect(url);
 var turnReady = false;
 
@@ -37,7 +37,7 @@ function updateTurn(callback) {
 			callback();
 		}
 	};
-	xhr.open('GET', 'http://wat.jasonshao.com/turnserver', true);
+	xhr.open('GET', url+'/turnserver', true);
 	xhr.send();
 }
 
@@ -56,7 +56,7 @@ function handleStream(currentRoom) {
 
     console.log('creating room', currentRoom);
     socket.emit('create room', currentRoom);
-    alert("Use the code "+currentRoom+" at wat.jasonshao.com to connect");
+    alert("Use the code "+currentRoom+" at "+url+" to connect");
 }
 
 function sendMessage(message) {
