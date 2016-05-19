@@ -18,4 +18,10 @@ window.addEventListener('load', function() {
             document.getElementById('submit').click()
         }
     });
+
+    document.getElementById("help").addEventListener("click", function() {
+        if (confirm("Click OK to download the Chrome Extension and follow instructions")) {
+            window.location.href='https://chrome.google.com/webstore/detail/wat/agiccfedafoadleabfjjoepofialejfg';
+        }
+    });
 });
