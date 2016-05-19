@@ -7,7 +7,7 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
-var url = 'http://wat.jasonshao.com/';
+var url = 'http://159.203.233.106:2015/';
 
 var turn_server = {
     'url': 'turn:162.222.183.171:3478?transport=udp', 
